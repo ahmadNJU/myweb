@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HSK 3 Mock Test | Ahmad Nawaz</title>
+<link rel="stylesheet" href="styles.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<style>
+  /* ---- HSK mock, built on the site tokens (navy/blue/gold/Inter) ---- */
+  .hsk-wrap{max-width:900px;margin:0 auto;padding:1.5rem 1rem 4rem}
+  .hsk-hero{background:linear-gradient(135deg,var(--navy),#184f87 60%,#2b79b8);color:#fff;border-radius:20px;padding:2rem 1.6rem;margin:1.2rem 0}
+  .hsk-hero h1{margin:.2rem 0 .4rem;font-size:1.9rem}
+  .hsk-hero p{margin:.3rem 0;color:#e6f0fb}
+  .hsk-badges{margin-top:1rem;display:flex;flex-wrap:wrap;gap:.5rem}
+  .hsk-badges .pill{background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.28);padding:.4rem .7rem;border-radius:999px;font-size:.85rem}
+  .hsk-card{background:#fff;border:1px solid var(--line);border-radius:16px;padding:1.2rem 1.3rem;box-shadow:0 10px 24px rgba(15,47,87,.06);margin:1rem 0}
+  .hsk-card h3{margin:.1rem 0 .6rem;color:var(--navy)}
+  .hsk-rules{margin:.4rem 0 0;padding-left:1.1rem;color:var(--muted)}
+  .hsk-rules li{margin:.28rem 0}
+  .btn.gold{background:var(--gold);color:#fff}
+  .btn.navy{background:var(--navy);color:#fff}
+  .btn.ghost{background:#fff;color:var(--navy);border:1px solid var(--line)}
+  .btn[disabled]{opacity:.5;cursor:not-allowed}
+
+  /* exam shell */
+  .exam-topbar{position:sticky;top:0;z-index:30;background:rgba(255,255,255,.97);backdrop-filter:blur(8px);border-bottom:1px solid var(--line);
+    display:flex;align-items:center;justify-content:space-between;gap:.8rem;padding:.6rem 1rem;flex-wrap:wrap}
+  .exam-sec{font-weight:800;color:var(--navy)}
+  .exam-sec small{display:block;font-weight:600;color:var(--muted)}
+  .timer{font-variant-numeric:tabular-nums;font-weight:800;font-size:1.15rem;color:var(--navy);background:var(--sky);border:1px solid #cfe1f5;border-radius:999px;padding:.35rem .9rem}
+  .timer.warn{color:#b45309;background:#fff7ed;border-color:#fed7aa}
+  .timer.danger{color:#b91c1c;background:#fef2f2;border-color:#fecaca}
+
+  .navigator{display:flex;flex-wrap:wrap;gap:.35rem;margin:.4rem 0 0}
+  .navigator button{width:34px;height:34px;border-radius:8px;border:1px solid var(--line);background:#fff;color:var(--ink);font-weight:700;cursor:pointer;font-size:.82rem}
+  .navigator button.answered{background:var(--navy);color:#fff;border-color:var(--navy)}
+  .navigator button.current{outline:2px solid var(--gold);outline-offset:1px}
+
+  .part-head{margin:1.4rem 0 .4rem;padding-bottom:.3rem;border-bottom:2px solid var(--line)}
+  .part-head h2{margin:0;color:var(--navy);font-size:1.2rem}
+  .part-head p{margin:.2rem 0 0;color:var(--muted);font-size:.92rem}
+
+  .q{scroll-margin-top:120px;border:1px solid var(--line);border-radius:14px;padding:1rem 1.1rem;margin:.8rem 0;background:#fff}
+  .q .qn{display:inline-flex;align-items:center;justify-content:center;min-width:30px;height:30px;border-radius:8px;background:var(--sky);color:var(--navy);font-weight:800;margin-right:.5rem}
+  .q .zh{font-size:1.15rem;line-height:1.9}
+  .imgrow{display:flex;flex-wrap:wrap;gap:.6rem;margin:.6rem 0}
+  .imgtile{border:1px solid var(--line);border-radius:12px;padding:.6rem .7rem;text-align:center;min-width:92px}
+  .imgtile .emoji{font-size:2rem;display:block}
+  .imgtile .lab{font-size:.85rem;color:var(--muted);margin-top:.2rem}
+  .imgtile .tag{font-weight:800;color:var(--navy)}
+
+  .opts{display:flex;flex-direction:column;gap:.5rem;margin-top:.6rem}
+  .opt{display:flex;align-items:center;gap:.6rem;border:1px solid var(--line);border-radius:10px;padding:.6rem .8rem;cursor:pointer;background:#fff}
+  .opt:hover{border-color:var(--blue)}
+  .opt.sel{border-color:var(--navy);background:var(--sky)}
+  .opt .key{font-weight:800;color:var(--navy);min-width:1.3rem}
+  .tf{display:flex;gap:.6rem;margin-top:.6rem}
+  .tf .opt{flex:1;justify-content:center;font-weight:700}
+
+  .audio-btn{display:inline-flex;align-items:center;gap:.4rem;background:var(--navy);color:#fff;border:0;border-radius:999px;padding:.5rem .9rem;font-weight:700;cursor:pointer}
+  .audio-btn[disabled]{background:#9aa7b6}
+  .audio-note{font-size:.82rem;color:var(--muted);margin-left:.5rem}
+
+  .bank{display:flex;flex-wrap:wrap;gap:.5rem;margin:.4rem 0 .8rem;padding:.6rem;border:1px dashed var(--line);border-radius:10px;background:var(--sky)}
+  .bank .bw{font-weight:700;color:var(--navy)}
+  .passage{background:var(--sky);border:1px solid #cfe1f5;border-radius:10px;padding:.7rem .9rem;margin:.3rem 0 .6rem;line-height:1.9}
+
+  .chips{display:flex;flex-wrap:wrap;gap:.5rem;margin:.5rem 0}
+  .chip{border:1px solid var(--line);border-radius:10px;padding:.45rem .7rem;background:#fff;cursor:pointer;font-size:1.05rem}
+  .chip.used{opacity:.35;pointer-events:none}
+  .answer-line{min-height:44px;border:1px dashed var(--blue);border-radius:10px;padding:.5rem .7rem;background:#fff;font-size:1.15rem;display:flex;align-items:center;gap:.35rem;flex-wrap:wrap}
+  .answer-line .built{color:var(--navy);font-weight:700}
+  .charblank{display:inline-block;min-width:2.4rem;border-bottom:2px solid var(--navy);text-align:center}
+  .charin{width:3rem;font-size:1.3rem;text-align:center;border:1px solid var(--line);border-radius:8px;padding:.2rem}
+  .pin{color:var(--gold);font-weight:700}
+
+  .footer-bar{position:sticky;bottom:0;background:rgba(255,255,255,.97);border-top:1px solid var(--line);padding:.7rem 1rem;display:flex;justify-content:space-between;gap:.6rem;flex-wrap:wrap}
+
+  /* result */
+  .score-big{font-size:3rem;font-weight:800;color:var(--navy);line-height:1}
+  .score-row{display:flex;flex-wrap:wrap;gap:.8rem;margin:1rem 0}
+  .score-tile{flex:1;min-width:150px;border:1px solid var(--line);border-radius:12px;padding:1rem;text-align:center}
+  .score-tile .v{font-size:1.7rem;font-weight:800;color:var(--navy)}
+  .score-tile .l{color:var(--muted);font-size:.85rem;margin-top:.2rem}
+  .verdict{display:inline-block;padding:.4rem 1rem;border-radius:999px;font-weight:800}
+  .verdict.pass{background:#dcfce7;color:#166534}
+  .verdict.fail{background:#fef2f2;color:#b91c1c}
+  .rev-q{border:1px solid var(--line);border-radius:10px;padding:.7rem .9rem;margin:.5rem 0}
+  .rev-q.ok{border-left:4px solid #16a34a}
+  .rev-q.no{border-left:4px solid #dc2626}
+  .rev-tag{font-weight:700}
+  .hidden{display:none}
+  @media(max-width:560px){.hsk-hero h1{font-size:1.5rem}.q .zh{font-size:1.05rem}}
+</style>
+</head>
+<body>
+
+<div class="topbar"><div class="container"><span>Lecturer in Economics · University of Sahiwal</span><span><a href="mailto:ahmadnawaz@uosahiwal.edu.pk">ahmadnawaz@uosahiwal.edu.pk</a></span></div></div>
+<nav class="navbar"><div class="container nav-inner"><a class="brand" href="index.html">Ahmad Nawaz<span>Regional · Environmental · Technology Economics</span></a><div class="nav-links"><a href="index.html">Home</a><a href="ongoing-research.html">Ongoing Research</a><a href="publications.html">Publications</a><a href="courses-skills.html">Courses & Skills</a><a href="contact.html">Contact</a></div></div></nav>
+
+<!-- ===== START SCREEN ===== -->
+<div id="startScreen" class="hsk-wrap">
+  <div class="hsk-hero">
+    <p class="tagline" style="color:#ffd98a;font-weight:700">汉语水平考试 · HSK 3</p>
+    <h1>HSK 3 Mock Test</h1>
+    <p>A full computer-based style practice paper: Listening, Reading and Writing, timed and scored like the real exam.</p>
+    <div class="hsk-badges">
+      <span class="pill">80 questions</span>
+      <span class="pill">~90 minutes</span>
+      <span class="pill">Pass mark 180 / 300</span>
+      <span class="pill">Current (2.0) syllabus</span>
+    </div>
+  </div>
+
+  <div class="hsk-card">
+    <h3>Structure</h3>
+    <ul class="hsk-rules">
+      <li><strong>听力 Listening</strong> — 40 questions, ~35 min. Each recording plays <em>once</em>.</li>
+      <li><strong>阅读 Reading</strong> — 30 questions, 30 min.</li>
+      <li><strong>书写 Writing</strong> — 10 questions, 15 min (sentence ordering + writing characters).</li>
+      <li>Each section is scored out of 100; total out of 300; <strong>180 to pass</strong>.</li>
+    </ul>
+  </div>
+
+  <div class="hsk-card">
+    <h3>Exam-mode rules</h3>
+    <ul class="hsk-rules">
+      <li>Sections are timed and run in order. When a section's time ends, it moves on automatically.</li>
+      <li>You cannot return to a previous section once you leave it.</li>
+      <li>Listening audio can be played only once per question, as in the real test.</li>
+      <li>You need a Chinese input method for the writing section (typing characters).</li>
+      <li>Your score and a full answer review appear at the end.</li>
+    </ul>
+    <div style="margin-top:1rem">
+      <button class="btn navy" id="startBtn"><i class="fa-solid fa-play"></i> Start the test</button>
+      <span class="audio-note" id="audioWarn"></span>
+    </div>
+  </div>
+</div>
+
+<!-- ===== EXAM ===== -->
+<div id="examScreen" class="hidden">
+  <div class="exam-topbar">
+    <div class="exam-sec" id="secLabel">听力 Listening<small id="secSub">Part 1</small></div>
+    <div class="timer" id="timer">35:00</div>
+  </div>
+  <div class="hsk-wrap">
+    <div class="navigator" id="navigator"></div>
+    <div id="questions"></div>
+  </div>
+  <div class="footer-bar">
+    <span class="audio-note" id="progressNote"></span>
+    <button class="btn gold" id="nextSecBtn"><i class="fa-solid fa-forward"></i> Finish section</button>
+  </div>
+</div>
+
+<!-- ===== RESULT ===== -->
+<div id="resultScreen" class="hidden hsk-wrap"></div>
+
+<audio id="player"></audio>
+<script src="hsk3-data.js"></script>
+<script>
+(function(){
+  var D = window.HSK3;
+  var AUDIO_DIR = "audio/"; // qN.mp3
+  var state = { answers:{}, played:{}, order:["listening","reading","writing"], si:0, timers:{}, remaining:0, tick:null };
+
+  // ---- flatten a section into an ordered list of "blocks" for rendering ----
+  function listeningBlocks(){
+    var b=[]; var L=D.listening;
+    b.push({type:"parthead",title:"第一部分 · Listening Part 1",desc:L.part1.help});
+    L.part1.groups.forEach(function(g){
+      b.push({type:"imgset",images:g.images});
+      g.questions.forEach(function(q){ b.push({type:"listen_pic",q:q,images:g.images}); });
+    });
+    b.push({type:"parthead",title:"第二部分 · Listening Part 2",desc:L.part2.help});
+    L.part2.questions.forEach(function(q){ b.push({type:"listen_tf",q:q}); });
+    b.push({type:"parthead",title:"第三部分 · Listening Part 3",desc:L.part3.help});
+    L.part3.questions.forEach(function(q){ b.push({type:"listen_mc",q:q}); });
+    b.push({type:"parthead",title:"第四部分 · Listening Part 4",desc:L.part4.help});
+    L.part4.questions.forEach(function(q){ b.push({type:"listen_mc",q:q}); });
+    return b;
+  }
+  function readingBlocks(){
+    var b=[]; var R=D.reading;
+    b.push({type:"parthead",title:"第一部分 · Reading Part 1",desc:R.part1.help});
+    R.part1.groups.forEach(function(g){
+      b.push({type:"matchset",answers:g.answers});
+      g.questions.forEach(function(q){ b.push({type:"read_match",q:q,answers:g.answers}); });
+    });
+    b.push({type:"parthead",title:"第二部分 · Reading Part 2",desc:R.part2.help});
+    R.part2.groups.forEach(function(g){
+      b.push({type:"bankset",bank:g.bank});
+      g.questions.forEach(function(q){ b.push({type:"read_bank",q:q,bank:g.bank}); });
+    });
+    b.push({type:"parthead",title:"第三部分 · Reading Part 3",desc:R.part3.help});
+    R.part3.questions.forEach(function(q){ b.push({type:"read_pass",q:q}); });
+    return b;
+  }
+  function writingBlocks(){
+    var b=[]; var W=D.writing;
+    b.push({type:"parthead",title:"第一部分 · Writing Part 1",desc:W.part1.help});
+    W.part1.questions.forEach(function(q){ b.push({type:"write_order",q:q}); });
+    b.push({type:"parthead",title:"第二部分 · Writing Part 2",desc:W.part2.help});
+    W.part2.questions.forEach(function(q){ b.push({type:"write_char",q:q}); });
+    return b;
+  }
+  function blocksFor(sec){ return sec==="listening"?listeningBlocks():sec==="reading"?readingBlocks():writingBlocks(); }
+
+  // ---- helpers ----
+  function el(html){ var d=document.createElement("div"); d.innerHTML=html.trim(); return d.firstChild; }
+  function shuffle(a){ a=a.slice(); for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=a[i];a[i]=a[j];a[j]=t;} return a; }
+  function setAns(n,v){ state.answers[n]=v; refreshNav(); updateProgress(); }
+
+  var SEC_META={listening:{zh:"听力 Listening",min:D.meta.timing_min.listening},
+                reading:{zh:"阅读 Reading",min:D.meta.timing_min.reading},
+                writing:{zh:"书写 Writing",min:D.meta.timing_min.writing}};
+
+  // ---- rendering ----
+  function render(){
+    var sec=state.order[state.si];
+    document.getElementById("secLabel").innerHTML = SEC_META[sec].zh + '<small id="secSub"></small>';
+    var host=document.getElementById("questions"); host.innerHTML="";
+    var blocks=blocksFor(sec);
+    blocks.forEach(function(bl){ host.appendChild(renderBlock(bl,sec)); });
+    buildNav(sec);
+    updateProgress();
+    document.getElementById("nextSecBtn").innerHTML = (state.si===state.order.length-1)
+      ? '<i class="fa-solid fa-flag-checkered"></i> Finish & see score'
+      : '<i class="fa-solid fa-forward"></i> Finish section';
+    window.scrollTo(0,0);
+  }
+
+  function renderBlock(bl,sec){
+    if(bl.type==="parthead") return el('<div class="part-head"><h2>'+bl.title+'</h2><p>'+bl.desc+'</p></div>');
+    if(bl.type==="imgset"){
+      var h='<div class="q"><div class="imgrow">'+bl.images.map(function(im){
+        return '<div class="imgtile"><span class="tag">'+im.id+'</span><span class="emoji">'+im.emoji+'</span><span class="lab">'+im.label+'</span></div>';
+      }).join("")+'</div></div>';
+      return el(h);
+    }
+    if(bl.type==="matchset"){
+      var h='<div class="q"><div style="font-weight:700;color:var(--navy);margin-bottom:.3rem">选项 Options</div>'+
+        bl.answers.map(function(a){return '<div style="margin:.2rem 0"><b style="color:var(--navy)">'+a.id+'.</b> <span class="zh">'+a.text+'</span></div>';}).join("")+'</div>';
+      return el(h);
+    }
+    if(bl.type==="bankset"){
+      var h='<div class="q"><div class="bank">'+bl.bank.map(function(w){return '<span><b style="color:var(--navy)">'+w.id+'</b> <span class="bw">'+w.word+'</span></span>';}).join(" &nbsp; ")+'</div></div>';
+      return el(h);
+    }
+    // question blocks
+    var q=bl.q, n=q.n;
+    var wrap=el('<div class="q" id="q'+n+'"></div>');
+    var head='<div><span class="qn">'+n+'</span>';
+
+    if(bl.type==="listen_pic"||bl.type==="listen_tf"||bl.type==="listen_mc"){
+      head+='<button class="audio-btn" data-play="'+n+'"><i class="fa-solid fa-volume-high"></i> Play</button><span class="audio-note">plays once</span></div>';
+      wrap.appendChild(el(head));
+      if(bl.type==="listen_tf"){
+        wrap.appendChild(el('<div class="zh" style="margin:.5rem 0">'+q.statement+'</div>'));
+        var tf=el('<div class="tf"></div>');
+        [["true","✓ 对 (correct)"],["false","✗ 错 (wrong)"]].forEach(function(o){
+          var op=el('<div class="opt" data-n="'+n+'" data-v="'+o[0]+'"><span>'+o[1]+'</span></div>');
+          op.onclick=function(){ selectSingle(n,o[0],op); }; tf.appendChild(op);
+        });
+        wrap.appendChild(tf);
+      } else if(bl.type==="listen_mc"){
+        wrap.appendChild(optionList(n,q.options));
+      } else { // listen_pic: choose an image tag A-E
+        var opts={}; bl.images.forEach(function(im){opts[im.id]=im.label+" "+im.emoji;});
+        wrap.appendChild(optionList(n,opts));
+      }
+      return wrap;
+    }
+
+    if(bl.type==="read_match"){
+      head+='</div>'; wrap.appendChild(el(head));
+      wrap.appendChild(el('<div class="zh" style="margin:.3rem 0 .2rem">'+q.text+'</div>'));
+      var opts={}; bl.answers.forEach(function(a){opts[a.id]=a.text;});
+      wrap.appendChild(optionList(n,opts,true));
+      return wrap;
+    }
+    if(bl.type==="read_bank"){
+      head+='</div>'; wrap.appendChild(el(head));
+      wrap.appendChild(el('<div class="zh" style="margin:.3rem 0 .2rem">'+q.text+'</div>'));
+      var opts={}; bl.bank.forEach(function(w){opts[w.id]=w.word;});
+      wrap.appendChild(optionList(n,opts));
+      return wrap;
+    }
+    if(bl.type==="read_pass"){
+      head+='</div>'; wrap.appendChild(el(head));
+      wrap.appendChild(el('<div class="passage zh">'+q.passage+'</div>'));
+      wrap.appendChild(el('<div class="zh" style="font-weight:700;margin:.2rem 0">'+q.q+'</div>'));
+      wrap.appendChild(optionList(n,q.options));
+      return wrap;
+    }
+    if(bl.type==="write_order"){
+      head+='</div>'; wrap.appendChild(el(head));
+      wrap.appendChild(el('<p class="audio-note">Click the words in the correct order. Click a placed word to remove it.</p>'));
+      var line=el('<div class="answer-line"><span class="built"></span></div>');
+      var chips=el('<div class="chips"></div>');
+      var picked=[];
+      var toks=shuffle(q.tokens);
+      function redraw(){
+        line.querySelector(".built").textContent = picked.join("");
+        Array.prototype.forEach.call(chips.children,function(c){
+          c.classList.toggle("used", picked.indexOf(c.dataset.tok+"#"+c.dataset.i)>=0);
+        });
+        setAns(n, picked.join(""));
+      }
+      toks.forEach(function(t,i){
+        var c=el('<span class="chip" data-tok="'+t+'" data-i="'+i+'">'+t+'</span>');
+        c.onclick=function(){ picked.push(t+"#"+i); redraw(); };
+        // store display token separately
+        c.dataset.tok=t; chips.appendChild(c);
+      });
+      // clicking the built line removes last
+      line.onclick=function(){ if(picked.length){ picked.pop(); redraw(); } };
+      // picked stores "tok#i"; but answer needs joined tokens -> adjust
+      var origPush=picked.push.bind(picked);
+      wrap.appendChild(chips); wrap.appendChild(line);
+      // override redraw to use pure tokens
+      redraw=function(){
+        var pure=picked.map(function(p){return p.split("#")[0];});
+        line.querySelector(".built").textContent=pure.join("");
+        var usedset={}; picked.forEach(function(p){usedset[p]=1;});
+        Array.prototype.forEach.call(chips.children,function(c){
+          c.classList.toggle("used", usedset[c.dataset.tok+"#"+c.dataset.i]!=null);
+        });
+        setAns(n, pure.join(""));
+      };
+      return wrap;
+    }
+    if(bl.type==="write_char"){
+      head+='</div>'; wrap.appendChild(el(head));
+      var row=el('<div class="zh" style="margin:.4rem 0"></div>');
+      row.appendChild(document.createTextNode(q.before));
+      var pin=el('<span class="pin"> ['+q.pinyin+'] </span>');
+      var inp=el('<input class="charin" maxlength="1" data-n="'+n+'" aria-label="write character">');
+      inp.oninput=function(){ setAns(n, inp.value.trim()); };
+      row.appendChild(pin); row.appendChild(inp);
+      row.appendChild(document.createTextNode(q.after));
+      wrap.appendChild(row);
+      return wrap;
+    }
+    return wrap;
+  }
+
+  function optionList(n,opts,zhBig){
+    var box=el('<div class="opts"></div>');
+    Object.keys(opts).forEach(function(k){
+      var op=el('<div class="opt" data-n="'+n+'" data-v="'+k+'"><span class="key">'+k+'</span><span class="'+(zhBig?"zh":"")+'">'+opts[k]+'</span></div>');
+      op.onclick=function(){ selectSingle(n,k,op); };
+      box.appendChild(op);
+    });
+    return box;
+  }
+  function selectSingle(n,v,elm){
+    var box=elm.parentNode;
+    Array.prototype.forEach.call(box.querySelectorAll(".opt"),function(o){o.classList.remove("sel");});
+    elm.classList.add("sel"); setAns(n,v);
+  }
+
+  // ---- audio (play once) ----
+  document.getElementById("questions").addEventListener("click",function(e){
+    var btn=e.target.closest("[data-play]"); if(!btn) return;
+    var n=btn.getAttribute("data-play");
+    if(state.played[n]){ return; }
+    var player=document.getElementById("player");
+    player.src=AUDIO_DIR+"q"+n+".mp3";
+    player.play().then(function(){
+      btn.innerHTML='<i class="fa-solid fa-volume-high"></i> Playing…'; btn.disabled=true;
+    }).catch(function(){
+      btn.innerHTML='<i class="fa-solid fa-triangle-exclamation"></i> Audio missing'; btn.disabled=true;
+    });
+    player.onended=function(){ btn.innerHTML='<i class="fa-solid fa-check"></i> Played'; };
+    state.played[n]=true;
+  });
+
+  // ---- navigator ----
+  function sectionQNumbers(sec){
+    var nums=[]; blocksFor(sec).forEach(function(b){ if(b.q) nums.push(b.q.n); });
+    return nums;
+  }
+  function buildNav(sec){
+    var nav=document.getElementById("navigator"); nav.innerHTML="";
+    sectionQNumbers(sec).forEach(function(n){
+      var b=el('<button data-goto="'+n+'">'+n+'</button>');
+      b.onclick=function(){ var t=document.getElementById("q"+n); if(t) t.scrollIntoView({behavior:"smooth"}); };
+      nav.appendChild(b);
+    });
+    refreshNav();
+  }
+  function refreshNav(){
+    var sec=state.order[state.si];
+    var nav=document.getElementById("navigator"); if(!nav) return;
+    Array.prototype.forEach.call(nav.children,function(b){
+      var n=b.getAttribute("data-goto");
+      b.classList.toggle("answered", state.answers[n]!=null && state.answers[n]!=="");
+    });
+  }
+  function updateProgress(){
+    var sec=state.order[state.si]; var nums=sectionQNumbers(sec);
+    var done=nums.filter(function(n){return state.answers[n]!=null && state.answers[n]!=="";}).length;
+    document.getElementById("progressNote").textContent = done+" / "+nums.length+" answered in this section";
+  }
+
+  // ---- timer ----
+  function startTimer(){
+    var sec=state.order[state.si];
+    state.remaining = SEC_META[sec].min*60;
+    tickTimer();
+    clearInterval(state.tick);
+    state.tick=setInterval(function(){
+      state.remaining--;
+      if(state.remaining<=0){ clearInterval(state.tick); nextSection(true); }
+      tickTimer();
+    },1000);
+  }
+  function tickTimer(){
+    var m=Math.floor(state.remaining/60), s=state.remaining%60;
+    var t=document.getElementById("timer");
+    t.textContent=(m<10?"0":"")+m+":"+(s<10?"0":"")+s;
+    t.className="timer"+(state.remaining<=30?" danger":state.remaining<=120?" warn":"");
+  }
+
+  // ---- flow ----
+  function nextSection(auto){
+    clearInterval(state.tick);
+    if(state.si>=state.order.length-1){ return finish(); }
+    if(!auto){ if(!confirm("Finish this section and move on? You cannot come back.")) { startTimer(); return; } }
+    state.si++; render(); startTimer();
+  }
+  document.getElementById("nextSecBtn").onclick=function(){ nextSection(false); };
+
+  // ---- scoring ----
+  function grade(){
+    var res={listening:{c:0,t:0,items:[]},reading:{c:0,t:0,items:[]},writing:{c:0,t:0,items:[]}};
+    function check(sec,n,correct,got,label,disp){
+      var ok;
+      if(sec==="writing"){
+        var a=(got||"").replace(/\s|，|。|、/g,""); var b=(correct||"").replace(/\s|，|。|、/g,"");
+        ok=a===b && a!=="";
+      } else { ok = (got!=null) && (String(got)===String(correct)); }
+      res[sec].t++; if(ok) res[sec].c++;
+      res[sec].items.push({n:n,ok:ok,correct:disp||correct,got:got==null||got===""?"—":got,label:label});
+    }
+    var L=D.listening;
+    L.part1.groups.forEach(function(g){g.questions.forEach(function(q){check("listening",q.n,q.answer,state.answers[q.n],"Listening · picture");});});
+    L.part2.questions.forEach(function(q){check("listening",q.n,String(q.answer),state.answers[q.n],"Listening · true/false",q.answer?"✓ 对":"✗ 错");});
+    L.part3.questions.forEach(function(q){check("listening",q.n,q.answer,state.answers[q.n],"Listening · dialogue");});
+    L.part4.questions.forEach(function(q){check("listening",q.n,q.answer,state.answers[q.n],"Listening · dialogue");});
+    var R=D.reading;
+    R.part1.groups.forEach(function(g){g.questions.forEach(function(q){check("reading",q.n,q.answer,state.answers[q.n],"Reading · match");});});
+    R.part2.groups.forEach(function(g){g.questions.forEach(function(q){check("reading",q.n,q.answer,state.answers[q.n],"Reading · gap-fill");});});
+    R.part3.questions.forEach(function(q){check("reading",q.n,q.answer,state.answers[q.n],"Reading · passage");});
+    var W=D.writing;
+    W.part1.questions.forEach(function(q){check("writing",q.n,q.answer,state.answers[q.n],"Writing · order");});
+    W.part2.questions.forEach(function(q){check("writing",q.n,q.answer,state.answers[q.n],"Writing · character");});
+    return res;
+  }
+  function sectionScore(o){ return o.t?Math.round(o.c/o.t*100):0; }
+
+  function finish(){
+    clearInterval(state.tick);
+    document.getElementById("examScreen").classList.add("hidden");
+    var res=grade();
+    var ls=sectionScore(res.listening), rs=sectionScore(res.reading), ws=sectionScore(res.writing);
+    var total=ls+rs+ws, pass=total>=D.meta.pass;
+    var host=document.getElementById("resultScreen"); host.classList.remove("hidden");
+    var html='<div class="hsk-hero"><p class="tagline" style="color:#ffd98a;font-weight:700">HSK 3 · Result</p>'+
+      '<h1>Your score</h1><div class="score-big">'+total+' <span style="font-size:1.2rem;font-weight:600">/ 300</span></div>'+
+      '<p style="margin-top:.6rem"><span class="verdict '+(pass?"pass":"fail")+'">'+(pass?"PASS":"BELOW 180")+'</span> &nbsp; pass mark is 180</p></div>';
+    html+='<div class="score-row">'+
+      tile("听力 Listening",ls,res.listening)+tile("阅读 Reading",rs,res.reading)+tile("书写 Writing",ws,res.writing)+'</div>';
+    html+='<div class="hsk-card"><h3>Answer review</h3><p class="audio-note">Green = correct, red = your answer differs. Writing ignores punctuation and spacing.</p><div id="review"></div></div>';
+    html+='<div style="text-align:center;margin-top:1rem"><button class="btn navy" onclick="location.reload()"><i class="fa-solid fa-rotate-right"></i> Take it again</button></div>';
+    host.innerHTML=html;
+    var rev=host.querySelector("#review");
+    ["listening","reading","writing"].forEach(function(sec){
+      res[sec].items.forEach(function(it){
+        rev.appendChild(el('<div class="rev-q '+(it.ok?"ok":"no")+'"><span class="rev-tag">Q'+it.n+'</span> · '+it.label+
+          ' &nbsp; <span style="color:var(--muted)">correct:</span> <b>'+it.correct+'</b>'+
+          (it.ok?'':' &nbsp; <span style="color:var(--muted)">you:</span> <b>'+it.got+'</b>')+'</div>'));
+      });
+    });
+    window.scrollTo(0,0);
+  }
+  function tile(label,score,o){
+    return '<div class="score-tile"><div class="v">'+score+'</div><div class="l">'+label+' — '+o.c+'/'+o.t+' correct</div></div>';
+  }
+
+  // ---- start ----
+  document.getElementById("startBtn").onclick=function(){
+    document.getElementById("startScreen").classList.add("hidden");
+    document.getElementById("examScreen").classList.remove("hidden");
+    state.si=0; render(); startTimer();
+  };
+})();
+</script>
+</body>
+</html>
