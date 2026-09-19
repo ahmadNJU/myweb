@@ -172,14 +172,14 @@
     b.push({type:"parthead",title:"第一部分 · Listening Part 1",desc:L.part1.help});
     L.part1.groups.forEach(function(g){
       b.push({type:"imgset",images:g.images});
-      g.questions.forEach(function(q){ b.push({type:"listen_pic",q:q,images:g.images}); });
+      shuffle(g.questions).forEach(function(q){ b.push({type:"listen_pic",q:q,images:g.images}); });
     });
     b.push({type:"parthead",title:"第二部分 · Listening Part 2",desc:L.part2.help});
-    L.part2.questions.forEach(function(q){ b.push({type:"listen_tf",q:q}); });
+    shuffle(L.part2.questions).forEach(function(q){ b.push({type:"listen_tf",q:q}); });
     b.push({type:"parthead",title:"第三部分 · Listening Part 3",desc:L.part3.help});
-    L.part3.questions.forEach(function(q){ b.push({type:"listen_mc",q:q}); });
+    shuffle(L.part3.questions).forEach(function(q){ b.push({type:"listen_mc",q:q}); });
     b.push({type:"parthead",title:"第四部分 · Listening Part 4",desc:L.part4.help});
-    L.part4.questions.forEach(function(q){ b.push({type:"listen_mc",q:q}); });
+    shuffle(L.part4.questions).forEach(function(q){ b.push({type:"listen_mc",q:q}); });
     return b;
   }
   function readingBlocks(){
@@ -187,23 +187,23 @@
     b.push({type:"parthead",title:"第一部分 · Reading Part 1",desc:R.part1.help});
     R.part1.groups.forEach(function(g){
       b.push({type:"matchset",answers:g.answers});
-      g.questions.forEach(function(q){ b.push({type:"read_match",q:q,answers:g.answers}); });
+      shuffle(g.questions).forEach(function(q){ b.push({type:"read_match",q:q,answers:g.answers}); });
     });
     b.push({type:"parthead",title:"第二部分 · Reading Part 2",desc:R.part2.help});
     R.part2.groups.forEach(function(g){
       b.push({type:"bankset",bank:g.bank});
-      g.questions.forEach(function(q){ b.push({type:"read_bank",q:q,bank:g.bank}); });
+      shuffle(g.questions).forEach(function(q){ b.push({type:"read_bank",q:q,bank:g.bank}); });
     });
     b.push({type:"parthead",title:"第三部分 · Reading Part 3",desc:R.part3.help});
-    R.part3.questions.forEach(function(q){ b.push({type:"read_pass",q:q}); });
+    shuffle(R.part3.questions).forEach(function(q){ b.push({type:"read_pass",q:q}); });
     return b;
   }
   function writingBlocks(){
     var b=[]; var W=D.writing;
     b.push({type:"parthead",title:"第一部分 · Writing Part 1",desc:W.part1.help});
-    W.part1.questions.forEach(function(q){ b.push({type:"write_order",q:q}); });
+    shuffle(W.part1.questions).forEach(function(q){ b.push({type:"write_order",q:q}); });
     b.push({type:"parthead",title:"第二部分 · Writing Part 2",desc:W.part2.help});
-    W.part2.questions.forEach(function(q){ b.push({type:"write_char",q:q}); });
+    shuffle(W.part2.questions).forEach(function(q){ b.push({type:"write_char",q:q}); });
     return b;
   }
   function blocksFor(sec){ return sec==="listening"?listeningBlocks():sec==="reading"?readingBlocks():writingBlocks(); }
@@ -222,7 +222,7 @@
     var sec=state.order[state.si];
     document.getElementById("secLabel").innerHTML = SEC_META[sec].zh + '<small id="secSub"></small>';
     var host=document.getElementById("questions"); host.innerHTML="";
-    var blocks=blocksFor(sec);
+    var blocks=blocksFor(sec); state.curBlocks=blocks;
     blocks.forEach(function(bl){ host.appendChild(renderBlock(bl,sec)); });
     buildNav(sec);
     updateProgress();
@@ -349,7 +349,7 @@
 
   function optionList(n,opts,zhBig){
     var box=el('<div class="opts"></div>');
-    Object.keys(opts).forEach(function(k){
+    shuffle(Object.keys(opts)).forEach(function(k){
       var op=el('<div class="opt" data-n="'+n+'" data-v="'+k+'"><span class="key">'+k+'</span><span class="'+(zhBig?"zh":"")+'">'+opts[k]+'</span></div>');
       op.onclick=function(){ selectSingle(n,k,op); };
       box.appendChild(op);
@@ -380,7 +380,7 @@
 
   // ---- navigator ----
   function sectionQNumbers(sec){
-    var nums=[]; blocksFor(sec).forEach(function(b){ if(b.q) nums.push(b.q.n); });
+    var nums=[]; (state.curBlocks||blocksFor(sec)).forEach(function(b){ if(b.q) nums.push(b.q.n); });
     return nums;
   }
   function buildNav(sec){
